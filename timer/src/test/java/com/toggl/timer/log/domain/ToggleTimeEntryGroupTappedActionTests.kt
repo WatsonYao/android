@@ -15,7 +15,7 @@ class ToggleTimeEntryGroupTappedActionTests : FreeSpec({
     "The ToggleTimeEntryGroupTappedAction action" - {
         "should add groupId to expandedGroupId if it wasn't there before" {
             reducer.testReduce(
-                initialState = createInitialState(expandedGroupIds = setOf(2,3)),
+                initialState = createInitialState(expandedGroupIds = setOf(2, 3)),
                 action = TimeEntriesLogAction.ToggleTimeEntryGroupTapped(1)
             ) { state, _ ->
                 state.expandedGroupIds shouldContain 1
@@ -23,7 +23,7 @@ class ToggleTimeEntryGroupTappedActionTests : FreeSpec({
         }
         "should remove groupId from expandedGroupId if it was already there" {
             reducer.testReduce(
-                initialState = createInitialState(expandedGroupIds = setOf(1,2,3)),
+                initialState = createInitialState(expandedGroupIds = setOf(1, 2, 3)),
                 action = TimeEntriesLogAction.ToggleTimeEntryGroupTapped(1)
             ) { state, _ ->
                 state.expandedGroupIds shouldNotContain 1
@@ -31,7 +31,7 @@ class ToggleTimeEntryGroupTappedActionTests : FreeSpec({
         }
         "shouldn't return any effect" {
             reducer.testReduce(
-                initialState = createInitialState(expandedGroupIds = setOf(1,2,3)),
+                initialState = createInitialState(expandedGroupIds = setOf(1, 2, 3)),
                 action = TimeEntriesLogAction.ToggleTimeEntryGroupTapped(1)
             ) { _, effect ->
                 effect.shouldBeEmpty()
