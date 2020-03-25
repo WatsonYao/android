@@ -35,7 +35,7 @@ class TimeEntriesLogFragment : Fragment(R.layout.time_entries_log_fragment) {
 
     private val adapter = TimeEntriesLogAdapter(
         { store.dispatch(TimeEntriesLogAction.ContinueButtonTapped(it)) },
-        { TODO("dispatch group expanding action") }
+        { store.dispatch(TimeEntriesLogAction.ToggleTimeEntryGroupTapped(it))}
     )
 
     override fun onAttach(context: Context) {

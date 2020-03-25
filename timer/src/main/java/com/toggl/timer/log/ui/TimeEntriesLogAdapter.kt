@@ -14,7 +14,7 @@ import java.lang.IllegalStateException
 
 class TimeEntriesLogAdapter(
     private val onContinueTappedListener: (Long) -> Unit = {},
-    private val onExpandTappedListener: (List<Long>) -> Unit = {}
+    private val onExpandTappedListener: (Long) -> Unit = {}
 ) : ListAdapter<TimeEntryViewModel, TimeEntryLogViewHolder>(diffCallback) {
 
     private val dayHeaderViewType = 0
