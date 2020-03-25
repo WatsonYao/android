@@ -32,7 +32,8 @@ class TimeEntriesLogSelectorTests : FreeSpec({
                 timeService,
                 todayString,
                 yesterdayString,
-                false
+                false,
+                setOf()
             )
         }
 
@@ -44,7 +45,8 @@ class TimeEntriesLogSelectorTests : FreeSpec({
                 timeService,
                 todayString,
                 yesterdayString,
-                true
+                true,
+                setOf()
             )
         }
 
@@ -218,13 +220,13 @@ class TimeEntriesLogSelectorTests : FreeSpec({
      */
     val expectedTodayGroupedTimeEntries: List<TimeEntryViewModel> = listOf(
         singleItem.first().toFlatTimeEntryViewModel(projectsMap),
-        groupA.toTimeEntryGroupViewModel(projectsMap),
-        groupB.toTimeEntryGroupViewModel(projectsMap),
+        groupA.toTimeEntryGroupViewModel(1, false, projectsMap),
+        groupB.toTimeEntryGroupViewModel(1, false, projectsMap),
         twoProjects.first().toFlatTimeEntryViewModel(projectsMap),
         twoProjects[1].toFlatTimeEntryViewModel(projectsMap),
-        differentDescriptions.dropLast(1).toTimeEntryGroupViewModel(projectsMap),
+        differentDescriptions.dropLast(1).toTimeEntryGroupViewModel(1, false, projectsMap),
         differentDescriptions.last().toFlatTimeEntryViewModel(projectsMap),
-        longDuration.dropLast(1).toTimeEntryGroupViewModel(projectsMap),
+        longDuration.dropLast(1).toTimeEntryGroupViewModel(1, false, projectsMap),
         longDuration.last().toFlatTimeEntryViewModel(projectsMap)
     )
 

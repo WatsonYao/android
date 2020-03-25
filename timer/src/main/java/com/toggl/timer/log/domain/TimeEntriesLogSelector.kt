@@ -14,18 +14,20 @@ fun timeEntriesLogSelector(
     timeService: TimeService,
     todayString: String,
     yesterdayString: String,
-    shouldGroup: Boolean
+    shouldGroup: Boolean,
+    expandedGroupIds: Set<Long>
 ): List<TimeEntryViewModel> {
 
     val today = timeService.now().toLocalDate()
     val yesterday = today.minusDays(1)
 
-    fun TimeEntry.similarityHashCode(): Int {
+    fun TimeEntry.similarityHashCode(): Long {
         var result = description.hashCode()
         result = 31 * result + billable.hashCode()
+        result = 31 * result + startTime.dayOfYear.hashCode()
         result = 31 * result + (projectId?.hashCode() ?: 0)
         result = 31 * result + (taskId?.hashCode() ?: 0)
-        return result
+        return result.toLong()
     }
 
     fun List<TimeEntry>.mapToGroups(): List<List<TimeEntry>> =
@@ -55,8 +57,8 @@ fun timeEntriesLogSelector(
     suspend fun SequenceScope<TimeEntryViewModel>.yieldFlatTimeEntry(timeEntry: TimeEntry) =
         yield(timeEntry.toFlatTimeEntryViewModel(projects))
 
-    suspend fun SequenceScope<TimeEntryViewModel>.yieldTimeEntryGroup(timeEntries: List<TimeEntry>) =
-        yield(timeEntries.toTimeEntryGroupViewModel(projects))
+    suspend fun SequenceScope<TimeEntryViewModel>.yieldTimeEntryGroup(isExpanded: Boolean, timeEntries: List<TimeEntry>) =
+        yield(timeEntries.toTimeEntryGroupViewModel(timeEntries.first().similarityHashCode(), isExpanded, projects))
 
     return timeEntries.values
         .filter { it.duration != null && !it.isDeleted }
@@ -72,7 +74,15 @@ fun timeEntriesLogSelector(
                         if (timeEntryGroup.size == 1) {
                             yieldFlatTimeEntry(timeEntryGroup.first())
                         } else {
-                            yieldTimeEntryGroup(timeEntryGroup)
+                            val groupId = timeEntryGroup.first().similarityHashCode()
+                            if (expandedGroupIds.contains(groupId)) {
+                                yieldTimeEntryGroup(true, timeEntryGroup)
+                                for (timeEntry in timeEntryGroup) {
+                                    yieldFlatTimeEntry(timeEntry)
+                                }
+                            } else {
+                                yieldTimeEntryGroup(false, timeEntryGroup)
+                            }
                         }
                     }
                 } else {
