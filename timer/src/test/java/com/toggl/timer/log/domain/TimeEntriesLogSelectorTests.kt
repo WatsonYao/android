@@ -220,23 +220,27 @@ class TimeEntriesLogSelectorTests : FreeSpec({
      */
     val expectedTodayGroupedTimeEntries: List<TimeEntryViewModel> = listOf(
         singleItem.first().toFlatTimeEntryViewModel(projectsMap),
-        groupA.toTimeEntryGroupViewModel(1, false, projectsMap),
-        groupB.toTimeEntryGroupViewModel(1, false, projectsMap),
+        groupA.toTimeEntryGroupViewModel(groupA.first().similarityHashCode(), false, projectsMap),
+        groupB.toTimeEntryGroupViewModel(groupB.first().similarityHashCode(), false, projectsMap),
         twoProjects.first().toFlatTimeEntryViewModel(projectsMap),
         twoProjects[1].toFlatTimeEntryViewModel(projectsMap),
-        differentDescriptions.dropLast(1).toTimeEntryGroupViewModel(1, false, projectsMap),
+        differentDescriptions.dropLast(1).toTimeEntryGroupViewModel(differentDescriptions.first().similarityHashCode(), false, projectsMap),
         differentDescriptions.last().toFlatTimeEntryViewModel(projectsMap),
-        longDuration.dropLast(1).toTimeEntryGroupViewModel(1, false, projectsMap),
+        longDuration.dropLast(1).toTimeEntryGroupViewModel(longDuration.first().similarityHashCode(), false, projectsMap),
         longDuration.last().toFlatTimeEntryViewModel(projectsMap)
     )
 
-    val expectedYesterdayGroupedTimeEntries = expectedTodayGroupedTimeEntries.map {
-        when (it) {
-            is FlatTimeEntryViewModel -> it.copy(id = it.id * 100, startTime = it.startTime.minusDays(1))
-            is TimeEntryGroupViewModel -> it.copy(timeEntryIds = it.timeEntryIds.map { id -> id * 100 })
-            else -> it
-        }
-    }
+    val expectedYesterdayGroupedTimeEntries = listOf(
+        singleItem.mapToYesterday().first().toFlatTimeEntryViewModel(projectsMap),
+        groupA.mapToYesterday().toTimeEntryGroupViewModel(groupA.mapToYesterday().first().similarityHashCode(), false, projectsMap),
+        groupB.mapToYesterday().toTimeEntryGroupViewModel(groupB.mapToYesterday().first().similarityHashCode(), false, projectsMap),
+        twoProjects.mapToYesterday().first().toFlatTimeEntryViewModel(projectsMap),
+        twoProjects.mapToYesterday()[1].toFlatTimeEntryViewModel(projectsMap),
+        differentDescriptions.mapToYesterday().dropLast(1).toTimeEntryGroupViewModel(differentDescriptions.mapToYesterday().first().similarityHashCode(), false, projectsMap),
+        differentDescriptions.mapToYesterday().last().toFlatTimeEntryViewModel(projectsMap),
+        longDuration.mapToYesterday().dropLast(1).toTimeEntryGroupViewModel(longDuration.mapToYesterday().first().similarityHashCode(), false, projectsMap),
+        longDuration.mapToYesterday().last().toFlatTimeEntryViewModel(projectsMap)
+    )
 
     val expectedGroupedTimeEntries: List<TimeEntryViewModel> = listOf(
         DayHeaderViewModel(

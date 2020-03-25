@@ -21,15 +21,6 @@ fun timeEntriesLogSelector(
     val today = timeService.now().toLocalDate()
     val yesterday = today.minusDays(1)
 
-    fun TimeEntry.similarityHashCode(): Long {
-        var result = description.hashCode()
-        result = 31 * result + billable.hashCode()
-        result = 31 * result + startTime.dayOfYear.hashCode()
-        result = 31 * result + (projectId?.hashCode() ?: 0)
-        result = 31 * result + (taskId?.hashCode() ?: 0)
-        return result.toLong()
-    }
-
     fun List<TimeEntry>.mapToGroups(): List<List<TimeEntry>> =
         this.groupBy(TimeEntry::similarityHashCode)
             .map { (_, timeEntries) -> timeEntries }
@@ -92,4 +83,13 @@ fun timeEntriesLogSelector(
                 }
             }.toList()
         }
+}
+
+fun TimeEntry.similarityHashCode(): Long {
+    var result = description.hashCode()
+    result = 31 * result + billable.hashCode()
+    result = 31 * result + startTime.dayOfYear.hashCode()
+    result = 31 * result + (projectId?.hashCode() ?: 0)
+    result = 31 * result + (taskId?.hashCode() ?: 0)
+    return result.toLong()
 }
