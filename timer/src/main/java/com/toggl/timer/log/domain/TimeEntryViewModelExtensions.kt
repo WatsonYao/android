@@ -14,10 +14,11 @@ fun TimeEntry.toFlatTimeEntryViewModel(projects: Map<Long, Project>) =
         billable = billable
     )
 
-fun List<TimeEntry>.toTimeEntryGroupViewModel(projects: Map<Long, Project>) =
+fun List<TimeEntry>.toTimeEntryGroupViewModel(groupId: Long, isExpanded: Boolean, projects: Map<Long, Project>) =
     TimeEntryGroupViewModel(
+        groupId = groupId,
         timeEntryIds = map(TimeEntry::id),
-        isExpanded = false,
+        isExpanded = isExpanded,
         description = first().description,
         duration = totalDuration(),
         project = projects.getProjectViewModelFor(this.first()),

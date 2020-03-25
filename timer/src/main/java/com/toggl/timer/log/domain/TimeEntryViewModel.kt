@@ -26,6 +26,7 @@ data class DayHeaderViewModel(
 ) : TimeEntryViewModel()
 
 data class TimeEntryGroupViewModel(
+    val groupId: Long,
     val timeEntryIds: List<Long>,
     val isExpanded: Boolean,
     val description: String,

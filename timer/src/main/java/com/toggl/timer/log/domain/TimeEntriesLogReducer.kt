@@ -99,6 +99,13 @@ class TimeEntriesLogReducer @Inject constructor(private val repository: TimeEntr
                     )
                     noEffect()
                 }
+                is TimeEntriesLogAction.ToggleTimeEntryGroupTapped -> {
+                    val newUngroupedTimeEntries =
+                        if (state.value.expandedGroupIds.contains(action.groupId)) state.value.expandedGroupIds - action.groupId
+                        else state.value.expandedGroupIds + action.groupId
+                    state.value = state.value.copy(expandedGroupIds = newUngroupedTimeEntries)
+                    noEffect()
+                }
             }
 
     private fun startTimeEntry(timeEntry: EditableTimeEntry, repository: TimeEntryRepository) =

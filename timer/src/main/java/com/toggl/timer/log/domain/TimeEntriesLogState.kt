@@ -10,6 +10,7 @@ import com.toggl.timer.common.domain.TimerState
 data class TimeEntriesLogState(
     val timeEntries: Map<Long, TimeEntry>,
     val projects: Map<Long, Project>,
+    val expandedGroupIds: Set<Long>,
     val editableTimeEntry: EditableTimeEntry?
 ) {
     companion object {
@@ -17,6 +18,7 @@ data class TimeEntriesLogState(
             TimeEntriesLogState(
                 timerState.timeEntries,
                 timerState.projects,
+                timerState.localState.expandedGroupIds,
                 timerState.localState.editViewTimeEntry
             )
 
@@ -24,7 +26,8 @@ data class TimeEntriesLogState(
             timerState.copy(
                 timeEntries = timeEntriesLogState.timeEntries,
                 localState = timerState.localState.copy(
-                    editViewTimeEntry = timeEntriesLogState.editableTimeEntry
+                    editViewTimeEntry = timeEntriesLogState.editableTimeEntry,
+                    expandedGroupIds = timeEntriesLogState.expandedGroupIds
                 )
             )
     }
